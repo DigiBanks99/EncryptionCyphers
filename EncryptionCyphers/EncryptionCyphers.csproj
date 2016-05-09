@@ -50,6 +50,7 @@
     <Compile Include="Cyphers\eCypher.cs" />
     <Compile Include="Cyphers\ICypher.cs" />
     <Compile Include="Cyphers\VernamManager.cs" />
+    <Compile Include="Cyphers\VigenereCypher.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

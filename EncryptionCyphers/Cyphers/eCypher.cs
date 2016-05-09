@@ -3,6 +3,7 @@
   public enum eCypher
   {
     Default,
-    Vernam
+    Vernam,
+    Vigenere
   }
 }
