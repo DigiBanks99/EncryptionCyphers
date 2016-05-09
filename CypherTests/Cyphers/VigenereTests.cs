@@ -86,6 +86,43 @@ namespace EncryptionCyphers.Cyphers.Tests
       var vinegere = new VigenereCypher();
       var cypherResult = vinegere.Encrypt(plainText, key, 26);
       Assert.AreEqual(cypherResult, testCypherResult);
+      Assert.AreEqual(cypherResult.Length, testCypherResult.Length);
+
+      var complexString = "T3sting @ string with var1oUs values, s!gns.";
+      var complexKey = "C0mP13XkeY";
+      var complexEncryptedString = vinegere.Encrypt(complexString, complexKey, VigenereCypher.FULLALPHABET.Length);
+
+      Assert.AreNotEqual(complexEncryptedString, complexString);
+      Assert.AreEqual(complexEncryptedString.Length, complexString.Length);
+    }
+
+    [TestMethod()]
+    [TestCategory("Vinegere")]
+    public void DecryptTest()
+    {
+      var plainText = "ATTACKATDAWN";
+      var key = "LEMON";
+      var testCypherResult = "LXFOPVEFRNHR";
+
+      var vinegere = new VigenereCypher();
+      var cypherResult = vinegere.Encrypt(plainText, key, 26);
+      Assert.AreEqual(cypherResult, testCypherResult);
+      Assert.AreEqual(cypherResult.Length, testCypherResult.Length);
+
+      var decryptedText = vinegere.Decrypt(cypherResult, key, 26);
+      Assert.AreEqual(decryptedText, plainText);
+      Assert.AreEqual(decryptedText.Length, plainText.Length);
+
+      var complexString = "T3sting @ \"string\" with var1oUs 'values', s!gns. patTerN5 etC.";
+      var complexKey = "C0mP13XkeY";
+      var complexEncryptedString = vinegere.Encrypt(complexString, complexKey, VigenereCypher.FULLALPHABET.Length);
+
+      Assert.AreNotEqual(complexEncryptedString, complexString);
+      Assert.AreEqual(complexEncryptedString.Length, complexString.Length);
+
+      var decryptedComplexText = vinegere.Decrypt(complexEncryptedString, complexKey, VigenereCypher.FULLALPHABET.Length);
+      Assert.AreEqual(decryptedComplexText, complexString);
+      Assert.AreEqual(decryptedComplexText.Length, complexString.Length);
     }
   }
 }

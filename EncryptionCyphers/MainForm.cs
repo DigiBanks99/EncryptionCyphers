@@ -12,7 +12,20 @@ namespace EncryptionCyphers
 
     public void LoadControl()
     {
-      var vernam = new VernamCypher();
+      var vigenere = new VigenereCypher();
+    }
+
+    private void MainForm_Load(object sender, System.EventArgs e)
+    {
+      try
+      {
+        LoadControl();
+      }
+      catch
+      {
+        Application.Exit();
+        this.Close();
+      }
     }
   }
 }
