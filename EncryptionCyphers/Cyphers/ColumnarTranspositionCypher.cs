@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace EncryptionCyphers.Cyphers
 {
@@ -16,7 +18,7 @@ namespace EncryptionCyphers.Cyphers
     {
       var values = new int[key.Length];
 
-      for (var index= 0; index < key.Length; index++)
+      for (var index = 0; index < key.Length; index++)
       {
         values[index] = (int)key[index];
       }
@@ -53,18 +55,40 @@ namespace EncryptionCyphers.Cyphers
     /// <param name="key">The key.</param>
     /// <param name="plainText">The plaintext being encrypted.</param>
     /// <param name="padCharacter">A character that can be supplied to fill spaces not fille by the key</param>
-    /// <returns>A <see cref="Dictionary{int, char[]}"/> with the column order as the key and characters from the plain text
-    /// as values in a <see cref="char[]"/>.</returns>
-    public Dictionary<int, List<char>> GetColumns(string key, string plainText, char? padCharacter)
+    /// <returns>A <see cref="Dictionary{int, char?[]}"/> with the column order as the key and characters from the plain text
+    /// as values in a <see cref="char?[]"/>.</returns>
+    public Dictionary<int, List<char?>> GetColumns(string key, string plainText)
     {
-      var columns = new Dictionary<int, List<char>>();
+      var columns = BuildColumnStructure(key);
+      FillColumns(plainText, columns);
+
+      return columns;
+    }
+
+    private Dictionary<int, List<char?>> BuildColumnStructure(string key)
+    {
+      var columns = new Dictionary<int, List<char?>>();
       var keyColValues = GetKeyValues(key);
 
-      // build columns
       for (var index = 0; index < keyColValues.Length; index++)
-        columns.Add(keyColValues[index], new List<char>());
+        columns.Add(keyColValues[index], new List<char?>());
 
-      // Fill columns
+      return columns;
+    }
+
+    private Dictionary<int, char?[]> BuildColumnStructure(string key, int columnDepth)
+    {
+      var columns = new Dictionary<int, char?[]>();
+      var keyColValues = GetKeyValues(key);
+
+      for (var index = 0; index < keyColValues.Length; index++)
+        columns.Add(keyColValues[index], new char?[columnDepth]);
+
+      return columns;
+    }
+
+    private void FillColumns(string plainText, Dictionary<int, List<char?>> columns)
+    {
       var colText = plainText;
       var randomiser = new Random();
       while (!string.IsNullOrEmpty(colText))
@@ -74,52 +98,130 @@ namespace EncryptionCyphers.Cyphers
         {
           if (colText.Length > index)
             col.Value.Add(colText[index++]);
-          else if (padCharacter.HasValue)
-            col.Value.Add(padCharacter.Value);
           else
-            col.Value.Add(GetNullText(randomiser));
+            col.Value.Add(null);
         }
 
         colText = colText.Substring(index);
       }
-
-      return columns;
     }
 
-    public string Encrypt(string key, string plainText, char? padCharacter = null)
+    /// <summary>
+    /// Encrypt the plain text using the provided key. Optionally the remainder of the columns can be filled with a padded
+    /// character.
+    /// </summary>
+    /// <param name="key">The key</param>
+    /// <param name="plainText">The text to be encrypted</param>
+    /// <param name="padCharacter">The optional character to pad the remainder of the columns</param>
+    /// <returns></returns>
+    public string Encrypt(string key, string plainText)
     {
-      var columns = GetColumns(key, plainText, padCharacter);
+      var columns = GetColumns(key, plainText);
       var encryptedText = string.Empty;
 
       for (var i = 1; i <= columns.Count; i++)
       {
         var characters = columns[i];
-        foreach (char character in characters)
-          encryptedText += character.ToString();
+        foreach (char? character in characters)
+        {
+          if (character.HasValue)
+            encryptedText += character.ToString();
+        }
       }
 
       return encryptedText;
     }
 
     /// <summary>
-    /// Gets a randomised <see cref="char"/> value.
+    /// Determine the depth of each column 
     /// </summary>
-    /// <param name="randomiser">Supply a randomiser to ensure similar seeding does not happen.</param>
+    /// <param name="text"></param>
+    /// <param name="key"></param>
     /// <returns></returns>
-    private char GetNullText(Random randomiser)
+    public int DetermineColumnDepth(string text, string key)
     {
-      int randomInt = -1;
-      var validChar = false;
-      while (!validChar)
-      {
-        randomInt = randomiser.Next();
-        var charMax = char.GetNumericValue(char.MaxValue);
-        var charMin = char.GetNumericValue(char.MinValue);
+      return text.Length / key.Length;
+    }
 
-        if (charMin <= randomInt && randomInt <= charMax)
-          validChar = true;
+    public int DetermineColumnDepthRemainder(string text, string key)
+    { 
+      return text.Length % key.Length;
+    }
+
+    public string Decrypt(string key, string encryptedText)
+    {
+      var columnDepth = DetermineColumnDepth(encryptedText, key);
+      var remainder = DetermineColumnDepthRemainder(encryptedText, key);
+      var text = encryptedText;
+
+      var columns = GetDecryptionColumns(text, key, columnDepth, remainder);
+
+      var plainTextBuilder = new StringBuilder();
+
+      var table = BuildTextTable(columns);
+      var keyColValues = GetKeyValues(key);
+
+      for (var row = 0; row <= table.GetUpperBound(1); row++)
+      {
+        foreach (var col in keyColValues)
+        {
+          var character = table[col - 1, row];
+          if (character.HasValue)
+            plainTextBuilder.Append(character);
+        }
       }
-      return (char)randomInt;
+
+      return plainTextBuilder.ToString();
+    }
+
+    public Dictionary<int, char?[]> GetDecryptionColumns(string text, string key, int columnDepth, int remainder)
+    {
+      var keyColValues = GetKeyValues(key);
+
+      string[] sections = new string[keyColValues.Length];
+      for (var i = 0; i < sections.Length; i++)
+      {
+        var length = columnDepth;
+        if (remainder > 0 && i + 1 > keyColValues.Length - remainder)
+          length++;
+        sections[i] = text.Substring(0, length);
+        text = text.Substring(length);
+      }
+
+      var depth = columnDepth;
+      if (remainder > 0)
+        depth++;
+
+      var columns = BuildColumnStructure(key, depth);
+
+      foreach (var column in columns)
+      {
+        var section = sections[column.Key - 1];
+
+        for (var position = depth; position >= 0; position--)
+        {
+          if (section.Length >= position + 1)
+            column.Value[position] = section[position];
+        }
+      }
+
+      return columns;
+    }
+
+    public char?[,] BuildTextTable(Dictionary<int, char?[]> columns)
+    {
+      var table = new char?[columns.Count, columns.First().Value.Length];
+
+      foreach (var column in columns)
+      {
+        for (var pos = 0; pos < column.Value.Length; pos++)
+        {
+          if (column.Value[pos].HasValue)
+            table[column.Key - 1, pos] = column.Value[pos];
+        }
+      }
+
+      return table;
     }
   }
 }

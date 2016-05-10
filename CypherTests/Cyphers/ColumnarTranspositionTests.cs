@@ -38,9 +38,9 @@ namespace CypherTests.Cyphers
     {
       var key = "ZEBRAS";
       var plainText = "WEAREDISCOVEREDFLEEATONCE";
-      var expectedResult = "EVLNQACDTQESEAQROFOQDEECQWIREE";
+      var expectedResult = "EVLNACDTESEAROFODEECWIREE";
       var cipher = new ColumnarTranspositionCypher();
-      var encryptedText = cipher.Encrypt(key, plainText, 'Q');
+      var encryptedText = cipher.Encrypt(key, plainText);
       Assert.AreEqual(expectedResult, encryptedText);
 
       key = "BLUE DOVE";
@@ -48,6 +48,50 @@ namespace CypherTests.Cyphers
       expectedResult = "lgeCtne spntsidorgxbtmi  ee";
       encryptedText = cipher.Encrypt(key, plainText);
       Assert.AreEqual(expectedResult, encryptedText);
+    }
+
+    [TestMethod()]
+    [TestCategory("ColumnarTransposition")]
+    public void DetermineColumnDepthTest()
+    {
+      var plainText = "Complex string being tested";
+      var key = "BLUE DOVE";
+      var cipher = new ColumnarTranspositionCypher();
+      var columnDepth = cipher.DetermineColumnDepth(plainText, key);
+      Assert.AreEqual(columnDepth, 3);
+
+      key = "ZEBRAS";
+      plainText = "WEAREDISCOVEREDFLEEATONCE";
+      columnDepth = cipher.DetermineColumnDepth(plainText, key);
+      Assert.AreEqual(columnDepth, 4);
+    }
+
+    [TestMethod()]
+    [TestCategory("ColumnarTransposition")]
+    public void DecryptionTest()
+    {
+      var key = "ZEBRAS";
+      var plainText = "WEAREDISCOVEREDFLEEATONCE";
+      var expectedResult = "EVLNACDTESEAROFODEECWIREE";
+      var cipher = new ColumnarTranspositionCypher();
+      var encryptedText = cipher.Encrypt(key, plainText);
+      Assert.AreEqual(expectedResult, encryptedText);
+
+      var decryptedText = cipher.Decrypt(key, encryptedText);
+      Assert.AreEqual("WEAREDISCOVEREDFLEEATONCE", decryptedText);
+
+      key = "BLUE DOVE";
+      plainText = "Comp!ex string being tested";
+      expectedResult = "!geCtne spntsidorgxbtmi  ee";
+      encryptedText = cipher.Encrypt(key, plainText);
+      Assert.AreEqual(expectedResult, encryptedText);
+
+      var secondKey = "N3w l0nGer KeY @A";
+      encryptedText = cipher.Encrypt(secondKey, encryptedText);
+
+      decryptedText = cipher.Decrypt(secondKey, encryptedText);
+      decryptedText = cipher.Decrypt(key, decryptedText);
+      Assert.AreEqual(plainText, decryptedText);
     }
   }
 }

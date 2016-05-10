@@ -12,7 +12,10 @@ namespace EncryptionCyphers
 
     public void LoadControl()
     {
-      var vigenere = new VigenereCypher();
+      var key = "ZEBRAS";
+      var expectedResult = "EVLNQACDTQESEAQROFOQDEECQWIREE";
+      var cipher = new ColumnarTranspositionCypher();
+      cipher.Decrypt(key, expectedResult);
     }
 
     private void MainForm_Load(object sender, System.EventArgs e)
