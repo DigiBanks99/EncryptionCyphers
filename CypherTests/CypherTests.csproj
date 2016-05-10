@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Cyphers\ColumnarTranspositionTests.cs" />
     <Compile Include="Cyphers\VernamTests.cs" />
     <Compile Include="Cyphers\VigenereTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

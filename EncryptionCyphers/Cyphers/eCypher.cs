@@ -4,6 +4,7 @@
   {
     Default,
     Vernam,
-    Vigenere
+    Vigenere,
+    ColumnarTransposition
   }
 }
