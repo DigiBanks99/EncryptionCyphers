@@ -41,7 +41,13 @@ namespace CypherTests.Cyphers
       var expectedResult = "EVLNQACDTQESEAQROFOQDEECQWIREE";
       var cipher = new ColumnarTranspositionCypher();
       var encryptedText = cipher.Encrypt(key, plainText, 'Q');
-      Assert.AreNotEqual(expectedResult, encryptedText);
+      Assert.AreEqual(expectedResult, encryptedText);
+
+      key = "BLUE DOVE";
+      plainText = "Complex string being tested";
+      expectedResult = "lgeCtne spntsidorgxbtmi  ee";
+      encryptedText = cipher.Encrypt(key, plainText);
+      Assert.AreEqual(expectedResult, encryptedText);
     }
   }
 }

@@ -55,34 +55,32 @@ namespace EncryptionCyphers.Cyphers
     /// <param name="padCharacter">A character that can be supplied to fill spaces not fille by the key</param>
     /// <returns>A <see cref="Dictionary{int, char[]}"/> with the column order as the key and characters from the plain text
     /// as values in a <see cref="char[]"/>.</returns>
-    public Dictionary<int, char[]> GetColumns(string key, string plainText, char? padCharacter)
+    public Dictionary<int, List<char>> GetColumns(string key, string plainText, char? padCharacter)
     {
-      var columns = new Dictionary<int, char[]>();
+      var columns = new Dictionary<int, List<char>>();
       var keyColValues = GetKeyValues(key);
 
       // build columns
       for (var index = 0; index < keyColValues.Length; index++)
-        columns.Add(keyColValues[index], new char[keyColValues.Length]);
+        columns.Add(keyColValues[index], new List<char>());
 
       // Fill columns
       var colText = plainText;
       var randomiser = new Random();
-      int rowIndex = 0;
       while (!string.IsNullOrEmpty(colText))
       {
         int index = 0;
         foreach (var col in columns)
         {
-          if (colText.Length >= index)
-            col.Value[rowIndex] = colText[index++];
+          if (colText.Length > index)
+            col.Value.Add(colText[index++]);
           else if (padCharacter.HasValue)
-            col.Value[rowIndex] = padCharacter.Value;
+            col.Value.Add(padCharacter.Value);
           else
-            col.Value[rowIndex] = GetNullText(randomiser);
+            col.Value.Add(GetNullText(randomiser));
         }
 
         colText = colText.Substring(index);
-        rowIndex++;
       }
 
       return columns;
