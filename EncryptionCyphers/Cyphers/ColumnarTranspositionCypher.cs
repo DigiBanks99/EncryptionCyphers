@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -60,11 +59,17 @@ namespace EncryptionCyphers.Cyphers
     public Dictionary<int, List<char?>> GetColumns(string key, string plainText)
     {
       var columns = BuildColumnStructure(key);
-      FillColumns(plainText, columns);
+      FillEncryptionColumns(plainText, columns);
 
       return columns;
     }
 
+    /// <summary>
+    /// Builds the structure of the key column lookup table.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <returns>A <seealso cref="Dictionary{int, List{char?}}"/> with the key as the encryption key character value,
+    /// and the value the column structure containing the text characters.</returns>
     private Dictionary<int, List<char?>> BuildColumnStructure(string key)
     {
       var columns = new Dictionary<int, List<char?>>();
@@ -76,6 +81,13 @@ namespace EncryptionCyphers.Cyphers
       return columns;
     }
 
+    /// <summary>
+    /// Builds the structure of the key column lookup table.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="columnDepth">The depth the columns must reach.</param>
+    /// <returns>A <seealso cref="Dictionary{int, char?[]}"/> with the key as the encryption key character value,
+    /// and the value the column structure containing the text characters.</returns>
     private Dictionary<int, char?[]> BuildColumnStructure(string key, int columnDepth)
     {
       var columns = new Dictionary<int, char?[]>();
@@ -87,10 +99,14 @@ namespace EncryptionCyphers.Cyphers
       return columns;
     }
 
-    private void FillColumns(string plainText, Dictionary<int, List<char?>> columns)
+    /// <summary>
+    /// Fills the lookup structure's columns with the appropriate values.
+    /// </summary>
+    /// <param name="plainText">The text to be encrypted.</param>
+    /// <param name="columns">The lookup structure to be filled.</param>
+    private void FillEncryptionColumns(string plainText, Dictionary<int, List<char?>> columns)
     {
       var colText = plainText;
-      var randomiser = new Random();
       while (!string.IsNullOrEmpty(colText))
       {
         int index = 0;
@@ -107,12 +123,10 @@ namespace EncryptionCyphers.Cyphers
     }
 
     /// <summary>
-    /// Encrypt the plain text using the provided key. Optionally the remainder of the columns can be filled with a padded
-    /// character.
+    /// Encrypt the plain text using the provided key.
     /// </summary>
-    /// <param name="key">The key</param>
-    /// <param name="plainText">The text to be encrypted</param>
-    /// <param name="padCharacter">The optional character to pad the remainder of the columns</param>
+    /// <param name="key">The key.</param>
+    /// <param name="plainText">The text to be encrypted.</param>
     /// <returns></returns>
     public string Encrypt(string key, string plainText)
     {
@@ -133,40 +147,63 @@ namespace EncryptionCyphers.Cyphers
     }
 
     /// <summary>
-    /// Determine the depth of each column 
+    /// Decrypt the encrypted text using the provided key.
     /// </summary>
-    /// <param name="text"></param>
-    /// <param name="key"></param>
+    /// <param name="key">The key.</param>
+    /// <param name="encryptedText">The text to be decrypted.</param>
     /// <returns></returns>
+    public string Decrypt(string key, string encryptedText)
+    {
+      var columnDepth = DetermineColumnDepth(encryptedText, key);
+      var remainder = DetermineColumnDepthRemainder(encryptedText, key);
+      var columns = GetDecryptionColumns(encryptedText, key, columnDepth, remainder);
+      return BuildDecryptedString(key, columns);
+    }
+
+    /// <summary>
+    /// Determine the depth of each column.
+    /// </summary>
+    /// <param name="text">The text to be encrypted.</param>
+    /// <param name="key">The key for the encryption.</param>
+    /// <returns>A <see cref="int"/> value indicating the length, calculated as text.Length / key.Length.</returns>
     public int DetermineColumnDepth(string text, string key)
     {
       return text.Length / key.Length;
     }
 
+    /// <summary>
+    /// Determine the remainder depth the string would require. The remainder indicates which columns need
+    /// additional length columns in the structure.
+    /// </summary>
+    /// <param name="text">The text to be encrypted.</param>
+    /// <param name="key">The key for the encryption.</param>
+    /// <returns>A <see cref="int"/> value indicating the remainder, calculated as text.Length % key.Length.</returns>
     public int DetermineColumnDepthRemainder(string text, string key)
     { 
       return text.Length % key.Length;
     }
 
-    public string Decrypt(string key, string encryptedText)
+    /// <summary>
+    /// Build the return string from the lookup structure.
+    /// </summary>
+    /// <param name="key">The key for the decryption.</param>
+    /// <param name="columns">The lookup structure.</param>
+    /// <returns>The decrypted text.</returns>
+    private string BuildDecryptedString(string key, Dictionary<int, char?[]> columns)
     {
-      var columnDepth = DetermineColumnDepth(encryptedText, key);
-      var remainder = DetermineColumnDepthRemainder(encryptedText, key);
-      var text = encryptedText;
-
-      var columns = GetDecryptionColumns(text, key, columnDepth, remainder);
-
       var plainTextBuilder = new StringBuilder();
 
       var table = BuildTextTable(columns);
       var keyColValues = GetKeyValues(key);
 
+      // Start at the top row and move down to the remainder row
       for (var row = 0; row <= table.GetUpperBound(1); row++)
       {
+        // Start at the left most column as ordered by the key character values
         foreach (var col in keyColValues)
         {
           var character = table[col - 1, row];
-          if (character.HasValue)
+          if (character.HasValue) // If the character is not a null value
             plainTextBuilder.Append(character);
         }
       }
@@ -174,40 +211,82 @@ namespace EncryptionCyphers.Cyphers
       return plainTextBuilder.ToString();
     }
 
+    /// <summary>
+    /// Get the column lookup structure, with the <see cref="Dictionary{int, char?[]}.Key"/> as the key character value
+    /// and the <see cref="Dictionary{int, char?[]}.Value"/> as the string characters placed in their respective rows.
+    /// </summary>
+    /// <param name="text">The text to be decrypted.</param>
+    /// <param name="key">The key to use for the decryption.</param>
+    /// <param name="columnDepth">The depth of all columns.</param>
+    /// <param name="remainder">The remainder of columns that require extra depth.</param>
+    /// <returns>A lookup structure, with the <see cref="Dictionary{int, char?[]}.Key"/> as the key character value
+    /// and the <see cref="Dictionary{int, char?[]}.Value"/> as the string characters placed in their respective rows.</returns>
     public Dictionary<int, char?[]> GetDecryptionColumns(string text, string key, int columnDepth, int remainder)
     {
       var keyColValues = GetKeyValues(key);
-
-      string[] sections = new string[keyColValues.Length];
-      for (var i = 0; i < sections.Length; i++)
-      {
-        var length = columnDepth;
-        if (remainder > 0 && i + 1 > keyColValues.Length - remainder)
-          length++;
-        sections[i] = text.Substring(0, length);
-        text = text.Substring(length);
-      }
+      var remainderIndexList = GetRemainderKeyValues(keyColValues, remainder);
+      string[] sections = GetStringKeySections(text, columnDepth, keyColValues, remainderIndexList);
 
       var depth = columnDepth;
       if (remainder > 0)
         depth++;
 
       var columns = BuildColumnStructure(key, depth);
+      FillDecryptionColumns(sections, depth, columns);
 
+      return columns;
+    }
+
+    /// <summary>
+    /// Add the decryption text characters to their respective columns and rows.
+    /// </summary>
+    /// <param name="sections">The sections corresponding to the key character values.</param>
+    /// <param name="rowLength">How many rows are required per column.</param>
+    /// <param name="columns">The column lookup structure to be filled.</param>
+    private static void FillDecryptionColumns(string[] sections, int rowLength, Dictionary<int, char?[]> columns)
+    {
       foreach (var column in columns)
       {
         var section = sections[column.Key - 1];
 
-        for (var position = depth; position >= 0; position--)
+        for (var position = rowLength; position >= 0; position--)
         {
           if (section.Length >= position + 1)
             column.Value[position] = section[position];
         }
       }
-
-      return columns;
     }
 
+    /// <summary>
+    /// Break the string into sections corresponding to each key character value.
+    /// </summary>
+    /// <param name="text">The text to be decrypted.</param>
+    /// <param name="columnDepth">The number of rows in the lookup structure columns.</param>
+    /// <param name="keyColValues">The key character values index.</param>
+    /// <param name="remainderIndexList">The key characters that should contain additional characters to 
+    /// the <paramref name="columnDepth"/>.</param>
+    /// <returns></returns>
+    private static string[] GetStringKeySections(string text, int columnDepth, int[] keyColValues, List<int> remainderIndexList)
+    {
+      string[] sections = new string[keyColValues.Length];
+      for (var i = 0; i < sections.Length; i++)
+      {
+        var length = columnDepth;
+        if (remainderIndexList.Contains(i + 1))
+          length++;
+        sections[i] = text.Substring(0, length);
+        text = text.Substring(length);
+      }
+
+      return sections;
+    }
+
+    /// <summary>
+    /// Build a simple <see cref="char?[,]"/> table with the string characters taking up each value position.
+    /// Null values will fill the remainder row where no text should be.
+    /// </summary>
+    /// <param name="columns">The lookup structure.</param>
+    /// <returns>A table with the text in order.</returns>
     public char?[,] BuildTextTable(Dictionary<int, char?[]> columns)
     {
       var table = new char?[columns.Count, columns.First().Value.Length];
@@ -222,6 +301,25 @@ namespace EncryptionCyphers.Cyphers
       }
 
       return table;
+    }
+
+    /// <summary>
+    /// Get the key values, require additional space for additional text characters.
+    /// </summary>
+    /// <param name="keyColValues">The key character values.</param>
+    /// <param name="remainder">The remainder after depth computation, of key characters that require additional space.</param>
+    /// <returns>A <seealso cref="List{int}"/> with the key character values that require additional character space.</returns>
+    public List<int> GetRemainderKeyValues(int[] keyColValues, int remainder)
+    {
+      var remainderValueList = new List<int>();
+
+      for (var i = 0; i < keyColValues.Length; i++)
+      {
+        if (i + 1 <= remainder)
+          remainderValueList.Add(keyColValues[i]);
+      }
+
+      return remainderValueList;
     }
   }
 }
