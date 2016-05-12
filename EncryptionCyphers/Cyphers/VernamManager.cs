@@ -105,5 +105,17 @@ namespace EncryptionCyphers.Cyphers
         await stream.WriteAsync(plainText, 0, plainText.Length);
       }
     }
+
+    public async Task SaveKey(string path, byte[] key)
+    {
+      var fileInfo = new FileInfo(path);
+      if (!Directory.Exists(fileInfo.DirectoryName))
+        Directory.CreateDirectory(fileInfo.DirectoryName);
+
+      using (var stream = new FileStream(path, FileMode.Create))
+      {
+        await stream.WriteAsync(key, 0, key.Length);
+      }
+    }
   }
 }
