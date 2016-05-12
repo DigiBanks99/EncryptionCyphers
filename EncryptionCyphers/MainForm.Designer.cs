@@ -74,7 +74,27 @@
       this.buttonVigenereDecrypt = new System.Windows.Forms.Button();
       this.tabPageColumnarTransposition = new System.Windows.Forms.TabPage();
       this.lcCT = new System.Windows.Forms.Panel();
+      this.panelCTContent = new System.Windows.Forms.Panel();
+      this.panelCTEncryption = new System.Windows.Forms.Panel();
+      this.panelCTText = new System.Windows.Forms.Panel();
+      this.labelResult = new System.Windows.Forms.Label();
+      this.labelCTInput = new System.Windows.Forms.Label();
+      this.richTextBoxCTResult = new System.Windows.Forms.RichTextBox();
+      this.richTextBoxCTInput = new System.Windows.Forms.RichTextBox();
+      this.groupBoxCTKeys = new System.Windows.Forms.GroupBox();
+      this.listBoxCTKeys = new System.Windows.Forms.ListBox();
+      this.buttonCTAddKey = new System.Windows.Forms.Button();
+      this.textBoxCTAddKey = new System.Windows.Forms.TextBox();
+      this.panelCTSteps = new System.Windows.Forms.Panel();
+      this.groupBoxSteps = new System.Windows.Forms.GroupBox();
+      this.listBoxCTSteps = new System.Windows.Forms.ListBox();
+      this.panelCTOptions = new System.Windows.Forms.Panel();
+      this.labelCTSeeSteps = new System.Windows.Forms.Label();
+      this.radioButtonCTNo = new System.Windows.Forms.RadioButton();
+      this.radioButtonCTYes = new System.Windows.Forms.RadioButton();
       this.panelCTButtons = new System.Windows.Forms.Panel();
+      this.buttonCTRemoveKey = new System.Windows.Forms.Button();
+      this.buttonCTClearKeys = new System.Windows.Forms.Button();
       this.buttonCTClose = new System.Windows.Forms.Button();
       this.buttonCTEncrypt = new System.Windows.Forms.Button();
       this.buttonCTDecrypt = new System.Windows.Forms.Button();
@@ -91,6 +111,13 @@
       this.panelVigenereButtons.SuspendLayout();
       this.tabPageColumnarTransposition.SuspendLayout();
       this.lcCT.SuspendLayout();
+      this.panelCTContent.SuspendLayout();
+      this.panelCTEncryption.SuspendLayout();
+      this.panelCTText.SuspendLayout();
+      this.groupBoxCTKeys.SuspendLayout();
+      this.panelCTSteps.SuspendLayout();
+      this.groupBoxSteps.SuspendLayout();
+      this.panelCTOptions.SuspendLayout();
       this.panelCTButtons.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -235,6 +262,9 @@
       this.imageList.Images.SetKeyName(30, "cancel.png");
       this.imageList.Images.SetKeyName(31, "folder.png");
       this.imageList.Images.SetKeyName(32, "floppy-disk-save-button.png");
+      this.imageList.Images.SetKeyName(33, "add-tool.png");
+      this.imageList.Images.SetKeyName(34, "update-arrows.png");
+      this.imageList.Images.SetKeyName(35, "subtracting-button.png");
       // 
       // buttonVernamOpenFile
       // 
@@ -277,6 +307,7 @@
       this.textBoxVernamOpenFile.Size = new System.Drawing.Size(761, 30);
       this.textBoxVernamOpenFile.TabIndex = 0;
       this.textBoxVernamOpenFile.WordWrap = false;
+      this.textBoxVernamOpenFile.TextChanged += new System.EventHandler(this.vernameEditValueChanged);
       // 
       // textBoxVernamSaveTo
       // 
@@ -286,6 +317,7 @@
       this.textBoxVernamSaveTo.Size = new System.Drawing.Size(761, 30);
       this.textBoxVernamSaveTo.TabIndex = 0;
       this.textBoxVernamSaveTo.WordWrap = false;
+      this.textBoxVernamSaveTo.TextChanged += new System.EventHandler(this.vernameEditValueChanged);
       // 
       // textBoxVernamKeyStore
       // 
@@ -295,6 +327,7 @@
       this.textBoxVernamKeyStore.Size = new System.Drawing.Size(761, 30);
       this.textBoxVernamKeyStore.TabIndex = 2;
       this.textBoxVernamKeyStore.WordWrap = false;
+      this.textBoxVernamKeyStore.TextChanged += new System.EventHandler(this.vernameEditValueChanged);
       // 
       // labelVernamKeyStore
       // 
@@ -339,6 +372,7 @@
       this.richTextBoxVernamInput.Size = new System.Drawing.Size(862, 222);
       this.richTextBoxVernamInput.TabIndex = 1;
       this.richTextBoxVernamInput.Text = "";
+      this.richTextBoxVernamInput.TextChanged += new System.EventHandler(this.vernameEditValueChanged);
       // 
       // panelBernamButtons
       // 
@@ -609,6 +643,8 @@
       // 
       // lcCT
       // 
+      this.lcCT.Controls.Add(this.panelCTContent);
+      this.lcCT.Controls.Add(this.panelCTOptions);
       this.lcCT.Controls.Add(this.panelCTButtons);
       this.lcCT.Dock = System.Windows.Forms.DockStyle.Fill;
       this.lcCT.Location = new System.Drawing.Point(0, 0);
@@ -617,8 +653,201 @@
       this.lcCT.Size = new System.Drawing.Size(884, 480);
       this.lcCT.TabIndex = 1;
       // 
+      // panelCTContent
+      // 
+      this.panelCTContent.Controls.Add(this.panelCTEncryption);
+      this.panelCTContent.Controls.Add(this.panelCTSteps);
+      this.panelCTContent.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.panelCTContent.Location = new System.Drawing.Point(0, 70);
+      this.panelCTContent.Name = "panelCTContent";
+      this.panelCTContent.Size = new System.Drawing.Size(884, 363);
+      this.panelCTContent.TabIndex = 6;
+      // 
+      // panelCTEncryption
+      // 
+      this.panelCTEncryption.Controls.Add(this.panelCTText);
+      this.panelCTEncryption.Controls.Add(this.groupBoxCTKeys);
+      this.panelCTEncryption.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.panelCTEncryption.Location = new System.Drawing.Point(0, 0);
+      this.panelCTEncryption.Margin = new System.Windows.Forms.Padding(0);
+      this.panelCTEncryption.Name = "panelCTEncryption";
+      this.panelCTEncryption.Padding = new System.Windows.Forms.Padding(3);
+      this.panelCTEncryption.Size = new System.Drawing.Size(703, 363);
+      this.panelCTEncryption.TabIndex = 1;
+      // 
+      // panelCTText
+      // 
+      this.panelCTText.Controls.Add(this.labelResult);
+      this.panelCTText.Controls.Add(this.labelCTInput);
+      this.panelCTText.Controls.Add(this.richTextBoxCTResult);
+      this.panelCTText.Controls.Add(this.richTextBoxCTInput);
+      this.panelCTText.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.panelCTText.Location = new System.Drawing.Point(225, 3);
+      this.panelCTText.Name = "panelCTText";
+      this.panelCTText.Size = new System.Drawing.Size(475, 357);
+      this.panelCTText.TabIndex = 1;
+      // 
+      // labelResult
+      // 
+      this.labelResult.AutoSize = true;
+      this.labelResult.Location = new System.Drawing.Point(7, 185);
+      this.labelResult.Name = "labelResult";
+      this.labelResult.Size = new System.Drawing.Size(134, 13);
+      this.labelResult.TabIndex = 1;
+      this.labelResult.Text = "Your result will appear here";
+      // 
+      // labelCTInput
+      // 
+      this.labelCTInput.AutoSize = true;
+      this.labelCTInput.Location = new System.Drawing.Point(7, 4);
+      this.labelCTInput.Name = "labelCTInput";
+      this.labelCTInput.Size = new System.Drawing.Size(99, 13);
+      this.labelCTInput.TabIndex = 1;
+      this.labelCTInput.Text = "Enter your text here";
+      // 
+      // richTextBoxCTResult
+      // 
+      this.richTextBoxCTResult.Location = new System.Drawing.Point(6, 203);
+      this.richTextBoxCTResult.Name = "richTextBoxCTResult";
+      this.richTextBoxCTResult.Size = new System.Drawing.Size(466, 147);
+      this.richTextBoxCTResult.TabIndex = 0;
+      this.richTextBoxCTResult.Text = "";
+      this.richTextBoxCTResult.TextChanged += new System.EventHandler(this.columnarTranspositionEditValueChanged);
+      // 
+      // richTextBoxCTInput
+      // 
+      this.richTextBoxCTInput.Location = new System.Drawing.Point(6, 22);
+      this.richTextBoxCTInput.Name = "richTextBoxCTInput";
+      this.richTextBoxCTInput.Size = new System.Drawing.Size(466, 147);
+      this.richTextBoxCTInput.TabIndex = 0;
+      this.richTextBoxCTInput.Text = "";
+      this.richTextBoxCTInput.TextChanged += new System.EventHandler(this.columnarTranspositionEditValueChanged);
+      // 
+      // groupBoxCTKeys
+      // 
+      this.groupBoxCTKeys.Controls.Add(this.listBoxCTKeys);
+      this.groupBoxCTKeys.Controls.Add(this.buttonCTAddKey);
+      this.groupBoxCTKeys.Controls.Add(this.textBoxCTAddKey);
+      this.groupBoxCTKeys.Dock = System.Windows.Forms.DockStyle.Left;
+      this.groupBoxCTKeys.Location = new System.Drawing.Point(3, 3);
+      this.groupBoxCTKeys.Name = "groupBoxCTKeys";
+      this.groupBoxCTKeys.Size = new System.Drawing.Size(222, 357);
+      this.groupBoxCTKeys.TabIndex = 0;
+      this.groupBoxCTKeys.TabStop = false;
+      this.groupBoxCTKeys.Text = "Keys";
+      // 
+      // listBoxCTKeys
+      // 
+      this.listBoxCTKeys.FormattingEnabled = true;
+      this.listBoxCTKeys.Location = new System.Drawing.Point(5, 60);
+      this.listBoxCTKeys.Name = "listBoxCTKeys";
+      this.listBoxCTKeys.Size = new System.Drawing.Size(211, 290);
+      this.listBoxCTKeys.TabIndex = 2;
+      this.listBoxCTKeys.SelectedIndexChanged += new System.EventHandler(this.listBoxCTKeys_SelectedIndexChanged);
+      // 
+      // buttonCTAddKey
+      // 
+      this.buttonCTAddKey.ImageIndex = 33;
+      this.buttonCTAddKey.ImageList = this.imageList;
+      this.buttonCTAddKey.Location = new System.Drawing.Point(132, 20);
+      this.buttonCTAddKey.Name = "buttonCTAddKey";
+      this.buttonCTAddKey.Size = new System.Drawing.Size(75, 23);
+      this.buttonCTAddKey.TabIndex = 1;
+      this.buttonCTAddKey.UseVisualStyleBackColor = true;
+      this.buttonCTAddKey.Click += new System.EventHandler(this.buttonCTAddKey_Click);
+      // 
+      // textBoxCTAddKey
+      // 
+      this.textBoxCTAddKey.Location = new System.Drawing.Point(5, 20);
+      this.textBoxCTAddKey.Multiline = true;
+      this.textBoxCTAddKey.Name = "textBoxCTAddKey";
+      this.textBoxCTAddKey.Size = new System.Drawing.Size(211, 34);
+      this.textBoxCTAddKey.TabIndex = 0;
+      this.textBoxCTAddKey.TextChanged += new System.EventHandler(this.columnarTranspositionEditValueChanged);
+      // 
+      // panelCTSteps
+      // 
+      this.panelCTSteps.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.panelCTSteps.Controls.Add(this.groupBoxSteps);
+      this.panelCTSteps.Dock = System.Windows.Forms.DockStyle.Right;
+      this.panelCTSteps.Location = new System.Drawing.Point(703, 0);
+      this.panelCTSteps.Margin = new System.Windows.Forms.Padding(0);
+      this.panelCTSteps.Name = "panelCTSteps";
+      this.panelCTSteps.Size = new System.Drawing.Size(181, 363);
+      this.panelCTSteps.TabIndex = 0;
+      // 
+      // groupBoxSteps
+      // 
+      this.groupBoxSteps.Controls.Add(this.listBoxCTSteps);
+      this.groupBoxSteps.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.groupBoxSteps.Location = new System.Drawing.Point(0, 0);
+      this.groupBoxSteps.Margin = new System.Windows.Forms.Padding(0);
+      this.groupBoxSteps.Name = "groupBoxSteps";
+      this.groupBoxSteps.Size = new System.Drawing.Size(181, 363);
+      this.groupBoxSteps.TabIndex = 1;
+      this.groupBoxSteps.TabStop = false;
+      this.groupBoxSteps.Text = "Steps";
+      // 
+      // listBoxCTSteps
+      // 
+      this.listBoxCTSteps.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.listBoxCTSteps.FormattingEnabled = true;
+      this.listBoxCTSteps.Location = new System.Drawing.Point(3, 16);
+      this.listBoxCTSteps.Margin = new System.Windows.Forms.Padding(0);
+      this.listBoxCTSteps.Name = "listBoxCTSteps";
+      this.listBoxCTSteps.Size = new System.Drawing.Size(175, 344);
+      this.listBoxCTSteps.TabIndex = 0;
+      this.listBoxCTSteps.SelectedIndexChanged += new System.EventHandler(this.listBoxCTSteps_SelectedIndexChanged);
+      // 
+      // panelCTOptions
+      // 
+      this.panelCTOptions.Controls.Add(this.labelCTSeeSteps);
+      this.panelCTOptions.Controls.Add(this.radioButtonCTNo);
+      this.panelCTOptions.Controls.Add(this.radioButtonCTYes);
+      this.panelCTOptions.Dock = System.Windows.Forms.DockStyle.Top;
+      this.panelCTOptions.Location = new System.Drawing.Point(0, 0);
+      this.panelCTOptions.Name = "panelCTOptions";
+      this.panelCTOptions.Size = new System.Drawing.Size(884, 70);
+      this.panelCTOptions.TabIndex = 5;
+      // 
+      // labelCTSeeSteps
+      // 
+      this.labelCTSeeSteps.AutoSize = true;
+      this.labelCTSeeSteps.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.labelCTSeeSteps.Location = new System.Drawing.Point(8, 27);
+      this.labelCTSeeSteps.Name = "labelCTSeeSteps";
+      this.labelCTSeeSteps.Size = new System.Drawing.Size(214, 16);
+      this.labelCTSeeSteps.TabIndex = 3;
+      this.labelCTSeeSteps.Text = "Do you want to see the steps?";
+      // 
+      // radioButtonCTNo
+      // 
+      this.radioButtonCTNo.AutoSize = true;
+      this.radioButtonCTNo.Checked = true;
+      this.radioButtonCTNo.Location = new System.Drawing.Point(347, 27);
+      this.radioButtonCTNo.Name = "radioButtonCTNo";
+      this.radioButtonCTNo.Size = new System.Drawing.Size(39, 17);
+      this.radioButtonCTNo.TabIndex = 2;
+      this.radioButtonCTNo.TabStop = true;
+      this.radioButtonCTNo.Text = "No";
+      this.radioButtonCTNo.UseVisualStyleBackColor = true;
+      this.radioButtonCTNo.CheckedChanged += new System.EventHandler(this.radioButtonCT_CheckedChanged);
+      // 
+      // radioButtonCTYes
+      // 
+      this.radioButtonCTYes.AutoSize = true;
+      this.radioButtonCTYes.Location = new System.Drawing.Point(276, 27);
+      this.radioButtonCTYes.Name = "radioButtonCTYes";
+      this.radioButtonCTYes.Size = new System.Drawing.Size(43, 17);
+      this.radioButtonCTYes.TabIndex = 1;
+      this.radioButtonCTYes.Text = "Yes";
+      this.radioButtonCTYes.UseVisualStyleBackColor = true;
+      this.radioButtonCTYes.CheckedChanged += new System.EventHandler(this.radioButtonCT_CheckedChanged);
+      // 
       // panelCTButtons
       // 
+      this.panelCTButtons.Controls.Add(this.buttonCTRemoveKey);
+      this.panelCTButtons.Controls.Add(this.buttonCTClearKeys);
       this.panelCTButtons.Controls.Add(this.buttonCTClose);
       this.panelCTButtons.Controls.Add(this.buttonCTEncrypt);
       this.panelCTButtons.Controls.Add(this.buttonCTDecrypt);
@@ -628,6 +857,34 @@
       this.panelCTButtons.Name = "panelCTButtons";
       this.panelCTButtons.Size = new System.Drawing.Size(884, 47);
       this.panelCTButtons.TabIndex = 0;
+      // 
+      // buttonCTRemoveKey
+      // 
+      this.buttonCTRemoveKey.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.buttonCTRemoveKey.ImageIndex = 35;
+      this.buttonCTRemoveKey.ImageList = this.imageList;
+      this.buttonCTRemoveKey.Location = new System.Drawing.Point(216, 3);
+      this.buttonCTRemoveKey.Name = "buttonCTRemoveKey";
+      this.buttonCTRemoveKey.Size = new System.Drawing.Size(108, 39);
+      this.buttonCTRemoveKey.TabIndex = 1;
+      this.buttonCTRemoveKey.Text = "Remove Key";
+      this.buttonCTRemoveKey.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+      this.buttonCTRemoveKey.UseVisualStyleBackColor = true;
+      this.buttonCTRemoveKey.Click += new System.EventHandler(this.buttonCTRemoveKey_Click);
+      // 
+      // buttonCTClearKeys
+      // 
+      this.buttonCTClearKeys.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.buttonCTClearKeys.ImageIndex = 34;
+      this.buttonCTClearKeys.ImageList = this.imageList;
+      this.buttonCTClearKeys.Location = new System.Drawing.Point(102, 3);
+      this.buttonCTClearKeys.Name = "buttonCTClearKeys";
+      this.buttonCTClearKeys.Size = new System.Drawing.Size(108, 39);
+      this.buttonCTClearKeys.TabIndex = 1;
+      this.buttonCTClearKeys.Text = "Clear Keys";
+      this.buttonCTClearKeys.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+      this.buttonCTClearKeys.UseVisualStyleBackColor = true;
+      this.buttonCTClearKeys.Click += new System.EventHandler(this.buttonCTClearKeys_Click);
       // 
       // buttonCTClose
       // 
@@ -655,6 +912,7 @@
       this.buttonCTEncrypt.Text = "Encrypt";
       this.buttonCTEncrypt.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.buttonCTEncrypt.UseVisualStyleBackColor = true;
+      this.buttonCTEncrypt.Click += new System.EventHandler(this.buttonCTEncrypt_Click);
       // 
       // buttonCTDecrypt
       // 
@@ -668,6 +926,7 @@
       this.buttonCTDecrypt.Text = "Decrypt";
       this.buttonCTDecrypt.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.buttonCTDecrypt.UseVisualStyleBackColor = true;
+      this.buttonCTDecrypt.Click += new System.EventHandler(this.buttonCTDecrypt_Click);
       // 
       // MainForm
       // 
@@ -676,7 +935,11 @@
       this.ClientSize = new System.Drawing.Size(892, 507);
       this.Controls.Add(this.tabControlMain);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+      this.MaximizeBox = false;
+      this.MaximumSize = new System.Drawing.Size(908, 546);
+      this.MinimumSize = new System.Drawing.Size(908, 546);
       this.Name = "MainForm";
+      this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
       this.Text = "Encryption";
       this.Load += new System.EventHandler(this.MainForm_Load);
       this.tabControlMain.ResumeLayout(false);
@@ -694,6 +957,16 @@
       this.panelVigenereButtons.ResumeLayout(false);
       this.tabPageColumnarTransposition.ResumeLayout(false);
       this.lcCT.ResumeLayout(false);
+      this.panelCTContent.ResumeLayout(false);
+      this.panelCTEncryption.ResumeLayout(false);
+      this.panelCTText.ResumeLayout(false);
+      this.panelCTText.PerformLayout();
+      this.groupBoxCTKeys.ResumeLayout(false);
+      this.groupBoxCTKeys.PerformLayout();
+      this.panelCTSteps.ResumeLayout(false);
+      this.groupBoxSteps.ResumeLayout(false);
+      this.panelCTOptions.ResumeLayout(false);
+      this.panelCTOptions.PerformLayout();
       this.panelCTButtons.ResumeLayout(false);
       this.ResumeLayout(false);
 
@@ -751,6 +1024,26 @@
     private System.Windows.Forms.RichTextBox richTextBoxVigenereCustomAlphabet;
     private System.Windows.Forms.Label labelVigenereCustomAlphabet;
     private System.Windows.Forms.RadioButton radioButtonVigenereNo;
+    private System.Windows.Forms.Panel panelCTOptions;
+    private System.Windows.Forms.Label labelCTSeeSteps;
+    private System.Windows.Forms.RadioButton radioButtonCTNo;
+    private System.Windows.Forms.RadioButton radioButtonCTYes;
+    private System.Windows.Forms.Panel panelCTContent;
+    private System.Windows.Forms.Panel panelCTEncryption;
+    private System.Windows.Forms.Panel panelCTSteps;
+    private System.Windows.Forms.ListBox listBoxCTSteps;
+    private System.Windows.Forms.GroupBox groupBoxCTKeys;
+    private System.Windows.Forms.Button buttonCTAddKey;
+    private System.Windows.Forms.TextBox textBoxCTAddKey;
+    private System.Windows.Forms.Panel panelCTText;
+    private System.Windows.Forms.Label labelResult;
+    private System.Windows.Forms.Label labelCTInput;
+    private System.Windows.Forms.RichTextBox richTextBoxCTResult;
+    private System.Windows.Forms.RichTextBox richTextBoxCTInput;
+    private System.Windows.Forms.ListBox listBoxCTKeys;
+    private System.Windows.Forms.Button buttonCTClearKeys;
+    private System.Windows.Forms.Button buttonCTRemoveKey;
+    private System.Windows.Forms.GroupBox groupBoxSteps;
   }
 }
 

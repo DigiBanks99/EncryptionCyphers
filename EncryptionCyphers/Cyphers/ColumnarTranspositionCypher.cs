@@ -19,7 +19,7 @@ namespace EncryptionCyphers.Cyphers
 
       for (var index = 0; index < key.Length; index++)
       {
-        values[index] = (int)key[index];
+        values[index] = key[index];
       }
 
       int[] orderedKey = new int[key.Length];

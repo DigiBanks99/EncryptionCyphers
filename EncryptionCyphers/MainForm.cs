@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +14,7 @@ namespace EncryptionCyphers
     private SynchronizationContext _synchronizationContext = null;
     private const int TEXTBOX_BUTTON_WIDTH = 30;
     private const int TEXTBOX_BUTTON_HEIGHT = 30;
+    private const int CT_STEPS_CONTAINER_WIDTH = 181;
 
     #region Constructor
     public MainForm()
@@ -42,6 +42,7 @@ namespace EncryptionCyphers
       SetupTextBoxButtons(textBoxVernamSaveTo, buttonVernamSaveTo);
       SetupTextBoxButtons(textBoxVernamKeyStore, buttonVernamKeyStoreOpen);
       SetupTextBoxButtons(textBoxVernamKeyStore, buttonVernamKeyStoreSave, -TEXTBOX_BUTTON_HEIGHT);
+      SetupTextBoxButtons(textBoxCTAddKey, buttonCTAddKey);
     }
 
     private void SetupSynchronizationContext()
@@ -105,8 +106,11 @@ namespace EncryptionCyphers
     private void SetControlState()
     {
       SetVernamControlState();
+      SetVernamButtonState();
       SetVigenereControlState();
       SetVigenereButtonState();
+      SetColumnarTranspositionButtonState();
+      SetColumnarTranspositionLayoutWidths();
     }
 
     private void SetVernamControlState()
@@ -121,6 +125,28 @@ namespace EncryptionCyphers
         richTextBoxVernamInput.Enabled = true;
         textBoxVernamOpenFile.Enabled = false;
       }
+    }
+
+    private void SetVernamButtonState()
+    {
+      var enabled = true;
+
+      if (radioButtonFile.Checked)
+      {
+        if (string.IsNullOrEmpty(textBoxVernamKeyStore.Text) ||
+            string.IsNullOrEmpty(textBoxVernamOpenFile.Text) ||
+            string.IsNullOrEmpty(textBoxVernamSaveTo.Text))
+          enabled = false;
+      }
+      else if (radioButtonText.Checked)
+      {
+        if (string.IsNullOrEmpty(textBoxVernamKeyStore.Text) ||
+            string.IsNullOrEmpty(richTextBoxVernamInput.Text) ||
+            string.IsNullOrEmpty(textBoxVernamSaveTo.Text))
+          enabled = false;
+      }
+
+      buttonVernamEncrypt.Enabled = buttonVernamDecrypt.Enabled = enabled;
     }
 
     private void SetVigenereControlState()
@@ -148,6 +174,40 @@ namespace EncryptionCyphers
         enabled = false;
 
       buttonVigenereEncrypt.Enabled = buttonVigenereDecrypt.Enabled = enabled;
+    }
+
+    private void SetColumnarTranspositionButtonState()
+    {
+      buttonCTAddKey.Enabled = !string.IsNullOrEmpty(textBoxCTAddKey.Text);
+      buttonCTRemoveKey.Enabled = listBoxCTKeys.SelectedIndex > -1;
+
+      var enabled = true;
+      if (string.IsNullOrEmpty(richTextBoxCTInput.Text) || listBoxCTKeys.Items == null || listBoxCTKeys.Items.Count == 0)
+        enabled = false;
+
+      buttonCTEncrypt.Enabled = buttonCTDecrypt.Enabled = enabled;
+    }
+
+    private void SetColumnarTranspositionLayoutWidths()
+    {
+      if (radioButtonCTNo.Checked)
+      {
+        panelCTSteps.Visible = false;
+        panelCTSteps.Size = new Size(0, panelCTSteps.Height);
+        panelCTEncryption.Size = new Size(panelCTEncryption.Width + CT_STEPS_CONTAINER_WIDTH, panelCTEncryption.Height);
+        panelCTText.Size = new Size(panelCTText.Width + CT_STEPS_CONTAINER_WIDTH, panelCTText.Height);
+        richTextBoxCTInput.Size = new Size(richTextBoxCTInput.Width + 90, richTextBoxCTInput.Height);
+        richTextBoxCTResult.Size = new Size(richTextBoxCTResult.Width + 90, richTextBoxCTResult.Height);
+      }
+      else if (radioButtonCTYes.Checked)
+      {
+        panelCTSteps.Visible = true;
+        panelCTSteps.Size = new Size(CT_STEPS_CONTAINER_WIDTH, panelCTSteps.Height);
+        panelCTEncryption.Size  = new Size(panelCTEncryption.Width - CT_STEPS_CONTAINER_WIDTH, panelCTEncryption.Height);
+        panelCTText.Size = new Size(panelCTText.Width - CT_STEPS_CONTAINER_WIDTH, panelCTText.Height);
+        richTextBoxCTInput.Size = new Size(richTextBoxCTInput.Width - 90, richTextBoxCTInput.Height);
+        richTextBoxCTResult.Size = new Size(richTextBoxCTResult.Width - 90, richTextBoxCTResult.Height);
+      }
     }
     #endregion
 
@@ -234,6 +294,46 @@ namespace EncryptionCyphers
       MessageBox.Show("Decryption successful. The text area for encryption has been filled with your result.", "Decrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
     #endregion Vigenére
+
+    #region Columna Transposition
+
+    private void EncryptColumnarTransposition()
+    {
+      if (listBoxCTSteps.Items != null && listBoxCTSteps.Items.Count > 0)
+        listBoxCTSteps.Items.Clear();
+
+      var encryptedText = richTextBoxCTInput.Text;
+      var ct = new ColumnarTranspositionCypher();
+
+      foreach (string key in listBoxCTKeys.Items)
+      {
+        encryptedText = ct.Encrypt(key, encryptedText);
+        listBoxCTSteps.Items.Add(encryptedText);
+      }
+
+      richTextBoxCTResult.Text = encryptedText;
+
+      MessageBox.Show("Encryption successful. The text area for decryption has been filled with your result.", "Encrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+
+    private void DecryptColumnarTransposition()
+    {
+      if (listBoxCTSteps.Items != null && listBoxCTSteps.Items.Count > 0)
+        listBoxCTSteps.Items.Clear();
+
+      var decryptedText = richTextBoxCTInput.Text;
+      var ct = new ColumnarTranspositionCypher();
+
+      foreach (string key in listBoxCTKeys.Items)
+      {
+        decryptedText = ct.Decrypt(key, decryptedText);
+        listBoxCTSteps.Items.Add(decryptedText);
+      }
+
+      richTextBoxCTResult.Text = decryptedText;
+      MessageBox.Show("Decryption successful. The text area for encryption has been filled with your result.", "Decrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+    #endregion Columna Transposition
 
     #endregion Encryption Functions
 
@@ -358,6 +458,7 @@ namespace EncryptionCyphers
       try
       {
         SetVernamControlState();
+        SetVernamButtonState();
       }
       catch (Exception ex)
       {
@@ -406,6 +507,135 @@ namespace EncryptionCyphers
       try
       {
         SetVigenereButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void buttonCTAddKey_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        listBoxCTKeys.Items.Add(textBoxCTAddKey.Text);
+        textBoxCTAddKey.Text = string.Empty;
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void columnarTranspositionEditValueChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void buttonCTClearKeys_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        listBoxCTKeys.Items.Clear();
+        textBoxCTAddKey.Text = string.Empty;
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void buttonCTRemoveKey_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        listBoxCTKeys.Items.RemoveAt(listBoxCTKeys.SelectedIndex);
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void radioButtonCT_CheckedChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        SetColumnarTranspositionLayoutWidths();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void buttonCTEncrypt_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        EncryptColumnarTransposition();
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void buttonCTDecrypt_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        DecryptColumnarTransposition();
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void listBoxCTSteps_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        richTextBoxCTResult.Text = listBoxCTSteps.SelectedItem as string;
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void listBoxCTKeys_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        textBoxCTAddKey.Text = listBoxCTKeys.SelectedItem as string;
+        SetColumnarTranspositionButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void vernameEditValueChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        SetVernamButtonState();
       }
       catch (Exception ex)
       {
