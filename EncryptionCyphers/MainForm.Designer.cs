@@ -56,6 +56,18 @@
       this.buttonVernamDecrypt = new System.Windows.Forms.Button();
       this.tabPageVigenere = new System.Windows.Forms.TabPage();
       this.lcVigenere = new System.Windows.Forms.Panel();
+      this.panel2 = new System.Windows.Forms.Panel();
+      this.richTextBoxVigenereCustomAlphabet = new System.Windows.Forms.RichTextBox();
+      this.labelVigenereCustomAlphabet = new System.Windows.Forms.Label();
+      this.radioButtonVigenereNo = new System.Windows.Forms.RadioButton();
+      this.radioButtonVigenereYes = new System.Windows.Forms.RadioButton();
+      this.labelAlphabet = new System.Windows.Forms.Label();
+      this.labelVigenereKey = new System.Windows.Forms.Label();
+      this.richTextBoxVigenereResult = new System.Windows.Forms.RichTextBox();
+      this.labelVigenereResult = new System.Windows.Forms.Label();
+      this.richTextBoxVigenereKey = new System.Windows.Forms.RichTextBox();
+      this.richTextBoxVigenereInput = new System.Windows.Forms.RichTextBox();
+      this.labelVigenerePlainText = new System.Windows.Forms.Label();
       this.panelVigenereButtons = new System.Windows.Forms.Panel();
       this.buttonVigenereClose = new System.Windows.Forms.Button();
       this.buttonVigenereEncrypt = new System.Windows.Forms.Button();
@@ -75,6 +87,7 @@
       this.panelBernamButtons.SuspendLayout();
       this.tabPageVigenere.SuspendLayout();
       this.lcVigenere.SuspendLayout();
+      this.panel2.SuspendLayout();
       this.panelVigenereButtons.SuspendLayout();
       this.tabPageColumnarTransposition.SuspendLayout();
       this.lcCT.SuspendLayout();
@@ -143,7 +156,7 @@
       // 
       this.labelVernamTextOrFile.AutoSize = true;
       this.labelVernamTextOrFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.labelVernamTextOrFile.Location = new System.Drawing.Point(30, 28);
+      this.labelVernamTextOrFile.Location = new System.Drawing.Point(8, 27);
       this.labelVernamTextOrFile.Name = "labelVernamTextOrFile";
       this.labelVernamTextOrFile.Size = new System.Drawing.Size(176, 16);
       this.labelVernamTextOrFile.TabIndex = 3;
@@ -304,7 +317,7 @@
       // labelVernamSaveTo
       // 
       this.labelVernamSaveTo.AutoSize = true;
-      this.labelVernamSaveTo.Location = new System.Drawing.Point(8, 123);
+      this.labelVernamSaveTo.Location = new System.Drawing.Point(8, 127);
       this.labelVernamSaveTo.Name = "labelVernamSaveTo";
       this.labelVernamSaveTo.Size = new System.Drawing.Size(89, 13);
       this.labelVernamSaveTo.TabIndex = 2;
@@ -385,8 +398,8 @@
       // 
       this.tabPageVigenere.Controls.Add(this.lcVigenere);
       this.tabPageVigenere.Location = new System.Drawing.Point(4, 23);
+      this.tabPageVigenere.Margin = new System.Windows.Forms.Padding(0);
       this.tabPageVigenere.Name = "tabPageVigenere";
-      this.tabPageVigenere.Padding = new System.Windows.Forms.Padding(3);
       this.tabPageVigenere.Size = new System.Drawing.Size(884, 480);
       this.tabPageVigenere.TabIndex = 1;
       this.tabPageVigenere.Text = "Vigenére";
@@ -394,13 +407,140 @@
       // 
       // lcVigenere
       // 
+      this.lcVigenere.Controls.Add(this.panel2);
+      this.lcVigenere.Controls.Add(this.labelVigenereKey);
+      this.lcVigenere.Controls.Add(this.richTextBoxVigenereResult);
+      this.lcVigenere.Controls.Add(this.labelVigenereResult);
+      this.lcVigenere.Controls.Add(this.richTextBoxVigenereKey);
+      this.lcVigenere.Controls.Add(this.richTextBoxVigenereInput);
+      this.lcVigenere.Controls.Add(this.labelVigenerePlainText);
       this.lcVigenere.Controls.Add(this.panelVigenereButtons);
       this.lcVigenere.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.lcVigenere.Location = new System.Drawing.Point(3, 3);
+      this.lcVigenere.Location = new System.Drawing.Point(0, 0);
       this.lcVigenere.Margin = new System.Windows.Forms.Padding(0);
       this.lcVigenere.Name = "lcVigenere";
-      this.lcVigenere.Size = new System.Drawing.Size(878, 474);
+      this.lcVigenere.Size = new System.Drawing.Size(884, 480);
       this.lcVigenere.TabIndex = 1;
+      // 
+      // panel2
+      // 
+      this.panel2.Controls.Add(this.richTextBoxVigenereCustomAlphabet);
+      this.panel2.Controls.Add(this.labelVigenereCustomAlphabet);
+      this.panel2.Controls.Add(this.radioButtonVigenereNo);
+      this.panel2.Controls.Add(this.radioButtonVigenereYes);
+      this.panel2.Controls.Add(this.labelAlphabet);
+      this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+      this.panel2.Location = new System.Drawing.Point(0, 0);
+      this.panel2.Name = "panel2";
+      this.panel2.Size = new System.Drawing.Size(884, 70);
+      this.panel2.TabIndex = 4;
+      // 
+      // richTextBoxVigenereCustomAlphabet
+      // 
+      this.richTextBoxVigenereCustomAlphabet.Location = new System.Drawing.Point(655, 13);
+      this.richTextBoxVigenereCustomAlphabet.Name = "richTextBoxVigenereCustomAlphabet";
+      this.richTextBoxVigenereCustomAlphabet.Size = new System.Drawing.Size(218, 45);
+      this.richTextBoxVigenereCustomAlphabet.TabIndex = 9;
+      this.richTextBoxVigenereCustomAlphabet.Text = "";
+      this.richTextBoxVigenereCustomAlphabet.Visible = false;
+      this.richTextBoxVigenereCustomAlphabet.TextChanged += new System.EventHandler(this.vigenereEditChanged_TextChanged);
+      // 
+      // labelVigenereCustomAlphabet
+      // 
+      this.labelVigenereCustomAlphabet.AutoSize = true;
+      this.labelVigenereCustomAlphabet.Location = new System.Drawing.Point(473, 30);
+      this.labelVigenereCustomAlphabet.Name = "labelVigenereCustomAlphabet";
+      this.labelVigenereCustomAlphabet.Size = new System.Drawing.Size(176, 13);
+      this.labelVigenereCustomAlphabet.TabIndex = 8;
+      this.labelVigenereCustomAlphabet.Text = "Enter your alphabet characters here";
+      this.labelVigenereCustomAlphabet.Visible = false;
+      // 
+      // radioButtonVigenereNo
+      // 
+      this.radioButtonVigenereNo.AutoSize = true;
+      this.radioButtonVigenereNo.Location = new System.Drawing.Point(417, 28);
+      this.radioButtonVigenereNo.Name = "radioButtonVigenereNo";
+      this.radioButtonVigenereNo.Size = new System.Drawing.Size(39, 17);
+      this.radioButtonVigenereNo.TabIndex = 6;
+      this.radioButtonVigenereNo.TabStop = true;
+      this.radioButtonVigenereNo.Text = "No";
+      this.radioButtonVigenereNo.UseVisualStyleBackColor = true;
+      // 
+      // radioButtonVigenereYes
+      // 
+      this.radioButtonVigenereYes.AutoSize = true;
+      this.radioButtonVigenereYes.Checked = true;
+      this.radioButtonVigenereYes.Location = new System.Drawing.Point(353, 28);
+      this.radioButtonVigenereYes.Name = "radioButtonVigenereYes";
+      this.radioButtonVigenereYes.Size = new System.Drawing.Size(43, 17);
+      this.radioButtonVigenereYes.TabIndex = 5;
+      this.radioButtonVigenereYes.TabStop = true;
+      this.radioButtonVigenereYes.Text = "Yes";
+      this.radioButtonVigenereYes.UseVisualStyleBackColor = true;
+      this.radioButtonVigenereYes.CheckedChanged += new System.EventHandler(this.radioButtonVigenereYes_CheckedChanged);
+      // 
+      // labelAlphabet
+      // 
+      this.labelAlphabet.AutoSize = true;
+      this.labelAlphabet.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.labelAlphabet.Location = new System.Drawing.Point(8, 28);
+      this.labelAlphabet.Name = "labelAlphabet";
+      this.labelAlphabet.Size = new System.Drawing.Size(301, 16);
+      this.labelAlphabet.TabIndex = 4;
+      this.labelAlphabet.Text = "Do you want to use the standard alphabet?";
+      // 
+      // labelVigenereKey
+      // 
+      this.labelVigenereKey.AutoSize = true;
+      this.labelVigenereKey.Location = new System.Drawing.Point(8, 73);
+      this.labelVigenereKey.Name = "labelVigenereKey";
+      this.labelVigenereKey.Size = new System.Drawing.Size(99, 13);
+      this.labelVigenereKey.TabIndex = 3;
+      this.labelVigenereKey.Text = "Enter your key here";
+      // 
+      // richTextBoxVigenereResult
+      // 
+      this.richTextBoxVigenereResult.Location = new System.Drawing.Point(11, 326);
+      this.richTextBoxVigenereResult.Name = "richTextBoxVigenereResult";
+      this.richTextBoxVigenereResult.Size = new System.Drawing.Size(862, 95);
+      this.richTextBoxVigenereResult.TabIndex = 2;
+      this.richTextBoxVigenereResult.Text = "";
+      // 
+      // labelVigenereResult
+      // 
+      this.labelVigenereResult.AutoSize = true;
+      this.labelVigenereResult.Location = new System.Drawing.Point(8, 310);
+      this.labelVigenereResult.Name = "labelVigenereResult";
+      this.labelVigenereResult.Size = new System.Drawing.Size(134, 13);
+      this.labelVigenereResult.TabIndex = 1;
+      this.labelVigenereResult.Text = "Your result will appear here";
+      // 
+      // richTextBoxVigenereKey
+      // 
+      this.richTextBoxVigenereKey.Location = new System.Drawing.Point(11, 89);
+      this.richTextBoxVigenereKey.Name = "richTextBoxVigenereKey";
+      this.richTextBoxVigenereKey.Size = new System.Drawing.Size(862, 69);
+      this.richTextBoxVigenereKey.TabIndex = 2;
+      this.richTextBoxVigenereKey.Text = "";
+      this.richTextBoxVigenereKey.TextChanged += new System.EventHandler(this.vigenereEditChanged_TextChanged);
+      // 
+      // richTextBoxVigenereInput
+      // 
+      this.richTextBoxVigenereInput.Location = new System.Drawing.Point(11, 191);
+      this.richTextBoxVigenereInput.Name = "richTextBoxVigenereInput";
+      this.richTextBoxVigenereInput.Size = new System.Drawing.Size(862, 95);
+      this.richTextBoxVigenereInput.TabIndex = 2;
+      this.richTextBoxVigenereInput.Text = "";
+      this.richTextBoxVigenereInput.TextChanged += new System.EventHandler(this.vigenereEditChanged_TextChanged);
+      // 
+      // labelVigenerePlainText
+      // 
+      this.labelVigenerePlainText.AutoSize = true;
+      this.labelVigenerePlainText.Location = new System.Drawing.Point(8, 175);
+      this.labelVigenerePlainText.Name = "labelVigenerePlainText";
+      this.labelVigenerePlainText.Size = new System.Drawing.Size(99, 13);
+      this.labelVigenerePlainText.TabIndex = 1;
+      this.labelVigenerePlainText.Text = "Enter your text here";
       // 
       // panelVigenereButtons
       // 
@@ -408,10 +548,10 @@
       this.panelVigenereButtons.Controls.Add(this.buttonVigenereEncrypt);
       this.panelVigenereButtons.Controls.Add(this.buttonVigenereDecrypt);
       this.panelVigenereButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panelVigenereButtons.Location = new System.Drawing.Point(0, 427);
+      this.panelVigenereButtons.Location = new System.Drawing.Point(0, 433);
       this.panelVigenereButtons.Margin = new System.Windows.Forms.Padding(0);
       this.panelVigenereButtons.Name = "panelVigenereButtons";
-      this.panelVigenereButtons.Size = new System.Drawing.Size(878, 47);
+      this.panelVigenereButtons.Size = new System.Drawing.Size(884, 47);
       this.panelVigenereButtons.TabIndex = 0;
       // 
       // buttonVigenereClose
@@ -419,7 +559,7 @@
       this.buttonVigenereClose.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
       this.buttonVigenereClose.ImageIndex = 29;
       this.buttonVigenereClose.ImageList = this.imageList;
-      this.buttonVigenereClose.Location = new System.Drawing.Point(5, 3);
+      this.buttonVigenereClose.Location = new System.Drawing.Point(11, 3);
       this.buttonVigenereClose.Name = "buttonVigenereClose";
       this.buttonVigenereClose.Size = new System.Drawing.Size(85, 39);
       this.buttonVigenereClose.TabIndex = 1;
@@ -440,6 +580,7 @@
       this.buttonVigenereEncrypt.Text = "Encrypt";
       this.buttonVigenereEncrypt.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.buttonVigenereEncrypt.UseVisualStyleBackColor = true;
+      this.buttonVigenereEncrypt.Click += new System.EventHandler(this.buttonVigenereEncrypt_Click);
       // 
       // buttonVigenereDecrypt
       // 
@@ -453,13 +594,14 @@
       this.buttonVigenereDecrypt.Text = "Decrypt";
       this.buttonVigenereDecrypt.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
       this.buttonVigenereDecrypt.UseVisualStyleBackColor = true;
+      this.buttonVigenereDecrypt.Click += new System.EventHandler(this.buttonVigenereDecrypt_Click);
       // 
       // tabPageColumnarTransposition
       // 
       this.tabPageColumnarTransposition.Controls.Add(this.lcCT);
       this.tabPageColumnarTransposition.Location = new System.Drawing.Point(4, 23);
+      this.tabPageColumnarTransposition.Margin = new System.Windows.Forms.Padding(0);
       this.tabPageColumnarTransposition.Name = "tabPageColumnarTransposition";
-      this.tabPageColumnarTransposition.Padding = new System.Windows.Forms.Padding(3);
       this.tabPageColumnarTransposition.Size = new System.Drawing.Size(884, 480);
       this.tabPageColumnarTransposition.TabIndex = 2;
       this.tabPageColumnarTransposition.Text = "Columnar Transposition";
@@ -469,10 +611,10 @@
       // 
       this.lcCT.Controls.Add(this.panelCTButtons);
       this.lcCT.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.lcCT.Location = new System.Drawing.Point(3, 3);
+      this.lcCT.Location = new System.Drawing.Point(0, 0);
       this.lcCT.Margin = new System.Windows.Forms.Padding(0);
       this.lcCT.Name = "lcCT";
-      this.lcCT.Size = new System.Drawing.Size(878, 474);
+      this.lcCT.Size = new System.Drawing.Size(884, 480);
       this.lcCT.TabIndex = 1;
       // 
       // panelCTButtons
@@ -481,10 +623,10 @@
       this.panelCTButtons.Controls.Add(this.buttonCTEncrypt);
       this.panelCTButtons.Controls.Add(this.buttonCTDecrypt);
       this.panelCTButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panelCTButtons.Location = new System.Drawing.Point(0, 427);
+      this.panelCTButtons.Location = new System.Drawing.Point(0, 433);
       this.panelCTButtons.Margin = new System.Windows.Forms.Padding(0);
       this.panelCTButtons.Name = "panelCTButtons";
-      this.panelCTButtons.Size = new System.Drawing.Size(878, 47);
+      this.panelCTButtons.Size = new System.Drawing.Size(884, 47);
       this.panelCTButtons.TabIndex = 0;
       // 
       // buttonCTClose
@@ -492,7 +634,7 @@
       this.buttonCTClose.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
       this.buttonCTClose.ImageIndex = 29;
       this.buttonCTClose.ImageList = this.imageList;
-      this.buttonCTClose.Location = new System.Drawing.Point(5, 3);
+      this.buttonCTClose.Location = new System.Drawing.Point(11, 3);
       this.buttonCTClose.Name = "buttonCTClose";
       this.buttonCTClose.Size = new System.Drawing.Size(85, 39);
       this.buttonCTClose.TabIndex = 1;
@@ -546,6 +688,9 @@
       this.panelBernamButtons.ResumeLayout(false);
       this.tabPageVigenere.ResumeLayout(false);
       this.lcVigenere.ResumeLayout(false);
+      this.lcVigenere.PerformLayout();
+      this.panel2.ResumeLayout(false);
+      this.panel2.PerformLayout();
       this.panelVigenereButtons.ResumeLayout(false);
       this.tabPageColumnarTransposition.ResumeLayout(false);
       this.lcCT.ResumeLayout(false);
@@ -594,6 +739,18 @@
     private System.Windows.Forms.Label labelVernamTextOrFile;
     private System.Windows.Forms.RadioButton radioButtonText;
     private System.Windows.Forms.RadioButton radioButtonFile;
+    private System.Windows.Forms.RichTextBox richTextBoxVigenereResult;
+    private System.Windows.Forms.Label labelVigenereResult;
+    private System.Windows.Forms.RichTextBox richTextBoxVigenereInput;
+    private System.Windows.Forms.Label labelVigenerePlainText;
+    private System.Windows.Forms.Label labelVigenereKey;
+    private System.Windows.Forms.RichTextBox richTextBoxVigenereKey;
+    private System.Windows.Forms.Panel panel2;
+    private System.Windows.Forms.RadioButton radioButtonVigenereYes;
+    private System.Windows.Forms.Label labelAlphabet;
+    private System.Windows.Forms.RichTextBox richTextBoxVigenereCustomAlphabet;
+    private System.Windows.Forms.Label labelVigenereCustomAlphabet;
+    private System.Windows.Forms.RadioButton radioButtonVigenereNo;
   }
 }
 

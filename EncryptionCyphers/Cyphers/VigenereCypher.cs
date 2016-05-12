@@ -10,24 +10,39 @@ namespace EncryptionCyphers.Cyphers
       get { return eCypher.Vigenere; }
     }
 
+    private string _alphabet = null;
+    public string Alphabet
+    {
+      get
+      {
+        if (!string.IsNullOrWhiteSpace(_alphabet))
+          return _alphabet;
+        return FULLALPHABET;
+      }
+      set
+      {
+        _alphabet = value;
+      }
+    }
+
     public const string FULLALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 `~!@#$%^&*()_+-={}|[]\\:\";'<>?,./";
 
     /// <summary>
     /// Gets the alphabet for the specified base number, limited to unicode characters
     /// </summary>
     /// <param name="baseNumber">The integer value of the number of unique characters to use in the alphabet</param>
-    /// <exception cref="CypherRuleException">If the base is longer than <see cref="FULLALPHABET"/>.</exception>
+    /// <exception cref="CypherRuleException">If the base is longer than <see cref="Alphabet"/>.</exception>
     /// <returns>A <seealso cref="char[]"/> of unique alphabet characters</returns>
-    public static char[] GetAlphabet(int baseNumber)
+    public char[] GetAlphabet(int baseNumber)
     {
-      if (baseNumber > FULLALPHABET.Length)
-        throw new CypherRuleException(string.Format("The base number cannot exceed {0} charcters.", FULLALPHABET.Length), eCypher.Vigenere);
+      if (baseNumber > Alphabet.Length)
+        throw new CypherRuleException(string.Format("The base number cannot exceed {0} charcters.", Alphabet.Length), eCypher.Vigenere);
 
       var alphabet = new char[baseNumber];
 
       for (var i = 0; i < baseNumber; i++)
       {
-        alphabet[i] = FULLALPHABET[i];
+        alphabet[i] = Alphabet[i];
       }
 
       return alphabet;

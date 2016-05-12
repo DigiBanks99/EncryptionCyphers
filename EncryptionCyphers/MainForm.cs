@@ -31,7 +31,7 @@ namespace EncryptionCyphers
       InitialiseVernamDataStore();
       SetInitialDirectory();
       SetupControls();
-      SetVernamControlState();
+      SetControlState();
     }
     #endregion
 
@@ -102,6 +102,13 @@ namespace EncryptionCyphers
       }
     }
 
+    private void SetControlState()
+    {
+      SetVernamControlState();
+      SetVigenereControlState();
+      SetVigenereButtonState();
+    }
+
     private void SetVernamControlState()
     {
       if (radioButtonFile.Checked)
@@ -114,6 +121,33 @@ namespace EncryptionCyphers
         richTextBoxVernamInput.Enabled = true;
         textBoxVernamOpenFile.Enabled = false;
       }
+    }
+
+    private void SetVigenereControlState()
+    {
+      richTextBoxVigenereCustomAlphabet.Text = VigenereCypher.FULLALPHABET;
+      if (radioButtonVigenereNo.Checked)
+      {
+        labelVigenereCustomAlphabet.Visible = true;
+        richTextBoxVigenereCustomAlphabet.Visible = true;
+      }
+      else if (radioButtonVigenereYes.Checked)
+      {
+        labelVigenereCustomAlphabet.Visible = false;
+        richTextBoxVigenereCustomAlphabet.Visible = false;
+      }
+    }
+
+    private void SetVigenereButtonState()
+    {
+      var enabled = true;
+
+      if (string.IsNullOrEmpty(richTextBoxVigenereInput.Text) ||
+          string.IsNullOrEmpty(richTextBoxVigenereKey.Text) ||
+          string.IsNullOrEmpty(richTextBoxVigenereCustomAlphabet.Text))
+        enabled = false;
+
+      buttonVigenereEncrypt.Enabled = buttonVigenereDecrypt.Enabled = enabled;
     }
     #endregion
 
@@ -136,16 +170,21 @@ namespace EncryptionCyphers
     private async Task EncryptVernamText(VernamManager vernam, string keyStore)
     {
       vernam.SetPlainText(richTextBoxVernamInput.Text);
-      var keyBytes = await vernam.GetKey(keyStore);
-      var keyDisplay = Encoding.Default.GetString(keyBytes);
-      await vernam.SaveKey(keyStore, keyBytes);
-      await vernam.EncryptStringAsync(textBoxVernamSaveTo.Text, richTextBoxVernamInput.Text, keyBytes);
+      var key = await vernam.GetKey(keyStore);
+      await vernam.SaveKey(keyStore, key);
+      await vernam.EncryptStringAsync(textBoxVernamSaveTo.Text, richTextBoxVernamInput.Text, key);
 
       MessageBox.Show("Encryption successful. Your encrypted File and Key can be found in the locations specified.", "Encrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     private async Task EncryptVernamFile(VernamManager vernam, string keyStore)
     {
+      vernam.SetPlainTextFromFile(textBoxVernamSaveTo.Text);
+      var key = await vernam.GetKey(keyStore);
+      await vernam.SaveKey(keyStore, key);
+      await vernam.EncryptFileAsync(textBoxVernamOpenFile.Text, textBoxVernamSaveTo.Text, key);
+
+      MessageBox.Show("Encryption successful. Your encrypted File and Key can be found in the locations specified.", "Encrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     private async Task DecryptVernam()
@@ -173,6 +212,28 @@ namespace EncryptionCyphers
       MessageBox.Show("Decryption successful. Your decrypted File and can be found in the location specified.", "Decrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
     #endregion Vernam
+
+    #region Vigenére
+    public void EncryptVigenere()
+    {
+      richTextBoxVigenereResult.Text = string.Empty;
+      var vigenere = new VigenereCypher();
+      vigenere.Alphabet = richTextBoxVigenereCustomAlphabet.Text;
+      richTextBoxVigenereResult.Text = vigenere.Encrypt(richTextBoxVigenereInput.Text, richTextBoxVigenereKey.Text, vigenere.Alphabet.Length);
+
+      MessageBox.Show("Encryption successful. The text area for decryption has been filled with your result.", "Encrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+
+    public void DecryptVigenere()
+    {
+      richTextBoxVigenereResult.Text = string.Empty;
+      var vigenere = new VigenereCypher();
+      vigenere.Alphabet = richTextBoxVigenereCustomAlphabet.Text;
+      richTextBoxVigenereResult.Text = vigenere.Decrypt(richTextBoxVigenereResult.Text, richTextBoxVigenereKey.Text, vigenere.Alphabet.Length);
+
+      MessageBox.Show("Decryption successful. The text area for encryption has been filled with your result.", "Decrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+    #endregion Vigenére
 
     #endregion Encryption Functions
 
@@ -297,6 +358,54 @@ namespace EncryptionCyphers
       try
       {
         SetVernamControlState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void buttonVigenereEncrypt_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        EncryptVigenere();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void buttonVigenereDecrypt_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        DecryptVigenere();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void radioButtonVigenereYes_CheckedChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        SetVigenereControlState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void vigenereEditChanged_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        SetVigenereButtonState();
       }
       catch (Exception ex)
       {
