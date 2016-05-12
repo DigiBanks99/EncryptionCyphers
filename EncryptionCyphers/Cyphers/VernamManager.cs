@@ -62,9 +62,23 @@ namespace EncryptionCyphers.Cyphers
       SetPlainText(text);
       if (key == null)
         key = await GetKey();
-      
+
       var encryptedText = _cypher.Encrypt(_plainText, key);
       return BinaryOperations.ConvertToString(encryptedText);
+    }
+
+    public async Task EncryptStringAsync(string savePath, string text, byte[] key = null)
+    {
+      SetPlainText(text);
+      if (key == null)
+        key = await GetKey();
+
+      var encryptedText = _cypher.Encrypt(_plainText, key);
+
+      using (var stream = new FileStream(savePath, FileMode.Create))
+      {
+        await stream.WriteAsync(encryptedText, 0, encryptedText.Length);
+      }
     }
 
     public async Task EncryptFileAsync(string unencryptedFilePath, string encryptedFilePath, byte[] key = null)
@@ -88,6 +102,22 @@ namespace EncryptionCyphers.Cyphers
       
       var encryptedText = BinaryOperations.ConvertToBytes(text);
       var plainText = _cypher.Decrypt(encryptedText, key);
+      return BinaryOperations.ConvertToString(plainText);
+    }
+
+    public async Task<string> DecryptStringAsync(string decryptedFilePath, string text, byte[] key)
+    {
+      if (key == null)
+        throw new ArgumentNullException("key");
+
+      var encryptedText = BinaryOperations.ConvertToBytes(text);
+      var plainText = _cypher.Decrypt(encryptedText, key);
+
+      using (var stream = new FileStream(decryptedFilePath, FileMode.Create))
+      {
+        await stream.WriteAsync(plainText, 0, plainText.Length);
+      }
+
       return BinaryOperations.ConvertToString(plainText);
     }
 
