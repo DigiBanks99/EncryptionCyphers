@@ -20,7 +20,6 @@ Global
 		{7F33A43D-4558-4C21-B4E0-A671BE910A0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F33A43D-4558-4C21-B4E0-A671BE910A0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F33A43D-4558-4C21-B4E0-A671BE910A0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F33A43D-4558-4C21-B4E0-A671BE910A0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
