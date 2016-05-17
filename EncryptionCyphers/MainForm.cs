@@ -230,7 +230,7 @@ namespace EncryptionCyphers
     private async Task EncryptVernamText(VernamManager vernam, string keyStore)
     {
       vernam.SetPlainText(richTextBoxVernamInput.Text);
-      var key = await vernam.GetKey(keyStore);
+      var key = await vernam.GetKey();
       await vernam.SaveKey(keyStore, key);
       await vernam.EncryptStringAsync(textBoxVernamSaveTo.Text, richTextBoxVernamInput.Text, key);
 
@@ -239,8 +239,8 @@ namespace EncryptionCyphers
 
     private async Task EncryptVernamFile(VernamManager vernam, string keyStore)
     {
-      vernam.SetPlainTextFromFile(textBoxVernamSaveTo.Text);
-      var key = await vernam.GetKey(keyStore);
+      vernam.SetPlainTextFromFile(textBoxVernamOpenFile.Text);
+      var key = await vernam.GetKey();
       await vernam.SaveKey(keyStore, key);
       await vernam.EncryptFileAsync(textBoxVernamOpenFile.Text, textBoxVernamSaveTo.Text, key);
 
@@ -271,6 +271,14 @@ namespace EncryptionCyphers
 
       MessageBox.Show("Decryption successful. Your decrypted File and can be found in the location specified.", "Decrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
+
+    private void ClearVernamInputs()
+    {
+      textBoxVernamOpenFile.Text = null;
+      textBoxVernamKeyStore.Text = null;
+      textBoxVernamSaveTo.Text = null;
+      richTextBoxVernamInput.Text = null;
+    }
     #endregion Vernam
 
     #region Vigenére
@@ -289,7 +297,7 @@ namespace EncryptionCyphers
       richTextBoxVigenereResult.Text = string.Empty;
       var vigenere = new VigenereCypher();
       vigenere.Alphabet = richTextBoxVigenereCustomAlphabet.Text;
-      richTextBoxVigenereResult.Text = vigenere.Decrypt(richTextBoxVigenereResult.Text, richTextBoxVigenereKey.Text, vigenere.Alphabet.Length);
+      richTextBoxVigenereResult.Text = vigenere.Decrypt(richTextBoxVigenereInput.Text, richTextBoxVigenereKey.Text, vigenere.Alphabet.Length);
 
       MessageBox.Show("Decryption successful. The text area for encryption has been filled with your result.", "Decrypted", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
@@ -459,6 +467,7 @@ namespace EncryptionCyphers
       {
         SetVernamControlState();
         SetVernamButtonState();
+        ClearVernamInputs();
       }
       catch (Exception ex)
       {
@@ -636,6 +645,18 @@ namespace EncryptionCyphers
       try
       {
         SetVernamButtonState();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        ClearVernamInputs();
       }
       catch (Exception ex)
       {

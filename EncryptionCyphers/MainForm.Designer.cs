@@ -100,6 +100,7 @@
       this.buttonCTDecrypt = new System.Windows.Forms.Button();
       this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
       this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+      this.button1 = new System.Windows.Forms.Button();
       this.tabControlMain.SuspendLayout();
       this.tabPageVernam.SuspendLayout();
       this.lcVernam.SuspendLayout();
@@ -376,6 +377,7 @@
       // 
       // panelBernamButtons
       // 
+      this.panelBernamButtons.Controls.Add(this.button1);
       this.panelBernamButtons.Controls.Add(this.buttonVernamClose);
       this.panelBernamButtons.Controls.Add(this.buttonVernamEncrypt);
       this.panelBernamButtons.Controls.Add(this.buttonVernamDecrypt);
@@ -928,6 +930,20 @@
       this.buttonCTDecrypt.UseVisualStyleBackColor = true;
       this.buttonCTDecrypt.Click += new System.EventHandler(this.buttonCTDecrypt_Click);
       // 
+      // button1
+      // 
+      this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.button1.ImageIndex = 34;
+      this.button1.ImageList = this.imageList;
+      this.button1.Location = new System.Drawing.Point(102, 3);
+      this.button1.Name = "button1";
+      this.button1.Size = new System.Drawing.Size(108, 39);
+      this.button1.TabIndex = 2;
+      this.button1.Text = "Clear";
+      this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+      this.button1.UseVisualStyleBackColor = true;
+      this.button1.Click += new System.EventHandler(this.button1_Click);
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1044,6 +1060,7 @@
     private System.Windows.Forms.Button buttonCTClearKeys;
     private System.Windows.Forms.Button buttonCTRemoveKey;
     private System.Windows.Forms.GroupBox groupBoxSteps;
+    private System.Windows.Forms.Button button1;
   }
 }
 
